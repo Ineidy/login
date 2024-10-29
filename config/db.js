@@ -1,15 +1,15 @@
 const mongoose = require('mongoose');
-require('dotenv').config();
+mongoose.set('strictQuery', true); // Suprimir la advertencia
+require('dotenv').config(); // Cargar las variables de entorno
 
-const connectDB = async () => {
-    let uri= "mongodb://root:campus2023@localhost:27017/login?authSource=admin"
-    try {
-        await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-        console.log('MongoDB connected');
-    } catch (error) {
-        console.error(error.message);
-        process.exit(1);
-    }
+const connect = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("Conectado a la base de datos");
+  } catch (error) {
+    console.error("Error al conectar con MongoDB:", error);
+    process.exit(1);
+  }
 };
 
-module.exports = connectDB;
+module.exports = connect;

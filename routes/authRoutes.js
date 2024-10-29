@@ -1,17 +1,32 @@
 const express = require('express');
 const passport = require('passport');
-const { loginSuccess, loginFailure } = require('../controllers/authController');
 const router = express.Router();
 
+// Google Auth Routes
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/auth/failure' }), loginSuccess);
+router.get('/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  (req, res) => {
+    res.redirect('/');
+  }
+);
 
-router.get('/facebook', passport.authenticate('facebook'));
-router.get('/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/auth/failure' }), loginSuccess);
+// Facebook Auth Routes
+router.get('/facebook', passport.authenticate('facebook', { scope: ['email'] }));
+router.get('/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  (req, res) => {
+    res.redirect('/');
+  }
+);
 
-router.get('/discord', passport.authenticate('discord'));
-router.get('/discord/callback', passport.authenticate('discord', { failureRedirect: '/auth/failure' }), loginSuccess);
-
-router.get('/failure', loginFailure);
+// Discord Auth Routes
+router.get('/discord', passport.authenticate('discord', { scope: ['identify', 'email'] }));
+router.get('/discord/callback',
+  passport.authenticate('discord', { failureRedirect: '/login' }),
+  (req, res) => {
+    res.redirect('/');
+  }
+);
 
 module.exports = router;
